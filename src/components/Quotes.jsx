@@ -5,10 +5,10 @@ import images from "../images";
 const Quotes = ({
   selectChange,
   inputChange,
+  charactersFilter,
   options,
   isLoading,
   filteredQuotes,
-  selected,
 }) => (
   <div>
     <div className='filter-contaienr'>
@@ -17,12 +17,9 @@ const Quotes = ({
         className='filter'
         onChange={selectChange}
         onInputChange={inputChange}
-        value={selected}
         placeholder={"filtrar por personaje"}
         options={options}
-        onMenuClose={() =>
-          selectChange({ value: "", label: "filtrar por personaje" })
-        }
+        onMenuClose={() => selectChange({ value: "" })}
       />
     </div>
     {!isLoading ? (

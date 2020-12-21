@@ -50,10 +50,6 @@ const QuotesContainer = () => {
   const [quotes, setQuotes] = useState([]);
   const [charactersFilter, setCharactersFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selected, setSelected] = useState({
-    value: "",
-    label: "",
-  });
 
   useEffect(() => {
     // console.log(location);
@@ -69,25 +65,20 @@ const QuotesContainer = () => {
     })();
   }, []);
 
-  const selectChange = ({ value, label }) => {
-    setSelected({ value, label });
-    setCharactersFilter(value);
-  };
+  const selectChange = ({ value }) => setCharactersFilter(value);
   const inputChange = (input) => setCharactersFilter(input);
 
   //get array of characters and remove dupplicates
-  const options = [...new Set(quotes.map((quote) => quote.character))].map(
-    (option) => {
+  const options = [...new Set(quotes.map((quote) => quote.character))]
+    .map((option) => {
       return { value: option, label: option };
-    }
-  );
+    })
+    .concat({ value: "", label: "All" });
   // const addToFavs = (quote) => localStorage.setItem("")
 
   const filteredQuotes = quotes.filter((quote) =>
     quote.character.toLowerCase().match(charactersFilter.toLowerCase())
   );
-
-  console.log(charactersFilter, "charactersFilter");
 
   return (
     <Quotes
@@ -97,7 +88,6 @@ const QuotesContainer = () => {
       inputChange={inputChange}
       isLoading={isLoading}
       charactersFilter={charactersFilter}
-      selected={selected}
     />
   );
 };

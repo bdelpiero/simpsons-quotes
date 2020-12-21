@@ -2,7 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 
 const config = {
-  entry: ["react-hot-loader/patch", "./src/index.js"],
+  entry: ["@babel/polyfill", "react-hot-loader/patch", "./src/index.js"],
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -23,13 +23,13 @@ const config = {
         use: "file-loader",
       },
       {
-        test: /\.png$/,
+        test: /\.(jpg|png)$/,
         use: [
           {
             loader: "url-loader",
-            options: {
-              mimetype: "image/png",
-            },
+            // options: {
+            //   mimetype: "image/png",
+            // },
           },
         ],
       },
@@ -44,9 +44,8 @@ const config = {
   devServer: {
     contentBase: "./dist",
     // proxy: {
-    //   "/api": {
-    //     target: "https://thesimpsonsquoteapi.glitch.me",
-    //     secure: false,
+    //   "/quotes": {
+    //     target: "https://friends-quotes-api.herokuapp.com",
     //   },
     // },
   },

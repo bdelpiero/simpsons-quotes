@@ -13,6 +13,7 @@
     "start": "webpack serve --hot --mode development"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
@@ -22,6 +23,7 @@
     "react-hot-loader": "^4.13.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-select": "^3.1.1",
     "styled-components": "^5.2.1"
   },
   "devDependencies": {

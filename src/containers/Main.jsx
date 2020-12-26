@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  Route,
-  Redirect,
-  Switch,
-  useLocation,
-  useHistory,
-} from "react-router-dom";
+import React from "react";
+import { Route, Switch, useLocation, useHistory } from "react-router-dom";
 import { hot } from "react-hot-loader/root";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,7 +7,6 @@ import NavBar from "../components/NavBar";
 import Hero from "../components/Hero";
 import QuotesContainer from "./QuotesContainer";
 import Footer from "../components/Footer";
-import axios from "axios";
 
 const App = () => {
   const history = useHistory();
@@ -32,7 +25,16 @@ const App = () => {
             path='/'
             render={() => <Hero goToQuotes={goToQuotes} />}
           />
-          <Route exact path='/quotes' component={QuotesContainer} />
+          <Route
+            exact
+            path='/quotes'
+            render={() => <QuotesContainer location={location} />}
+          />
+          <Route
+            exact
+            path='/favs'
+            render={() => <QuotesContainer location={location} />}
+          />
         </Switch>
       </div>
       <Footer location={location} />

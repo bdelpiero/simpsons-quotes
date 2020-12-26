@@ -1,60 +1,32 @@
 import React, { useEffect, useState } from "react";
 import Quotes from "../components/Quotes";
 
-// const dummyQuotes = [
-//   {
-//     quote:
-//       "“Los Santos fueron una bazofia, he visto bazofias en mi vida pero esta bazofia fue la más bazofia entre las bazofias…. ¡bueno, ya me voy porque me están oyendo los ñoños!”.",
-//     image:
-//       "https://i.pinimg.com/originals/90/c6/76/90c676a1cf11cbb16fbb1afa1da36776.jpg",
-//     character: "Homero",
-//   },
-//   {
-//     quote:
-//       "“Los Santos fueron una bazofia, he visto bazofias en mi vida pero esta bazofia fue la más bazofia entre las bazofias…. ¡bueno, ya me voy porque me están oyendo los ñoños!”.",
-//     image:
-//       "https://i.pinimg.com/originals/90/c6/76/90c676a1cf11cbb16fbb1afa1da36776.jpg",
-//     character: "Marge",
-//   },
-//   {
-//     quote:
-//       "“Los Santos fueron una bazofia, he visto bazofias en mi vida pero esta bazofia fue la más bazofia entre las bazofias…. ¡bueno, ya me voy porque me están oyendo los ñoños!”.",
-//     image:
-//       "https://i.pinimg.com/originals/90/c6/76/90c676a1cf11cbb16fbb1afa1da36776.jpg",
-//     character: "Marge",
-//   },
-//   {
-//     quote:
-//       "“Los Santos fueron una bazofia, he visto bazofias en mi vida pero esta bazofia fue la más bazofia entre las bazofias…. ¡bueno, ya me voy porque me están oyendo los ñoños!”.",
-//     image:
-//       "https://i.pinimg.com/originals/90/c6/76/90c676a1cf11cbb16fbb1afa1da36776.jpg",
-//     character: "Bart",
-//   },
-//   {
-//     quote:
-//       "“Los Santos fueron una bazofia, he visto bazofias en mi vida pero esta bazofia fue la más bazofia entre las bazofias…. ¡bueno, ya me voy porque me están oyendo los ñoños!”.",
-//     image:
-//       "https://i.pinimg.com/originals/90/c6/76/90c676a1cf11cbb16fbb1afa1da36776.jpg",
-//     character: "Homero",
-//   },
-//   {
-//     quote:
-//       "“Los Santos fueron una bazofia, he visto bazofias en mi vida pero esta bazofia fue la más bazofia entre las bazofias…. ¡bueno, ya me voy porque me están oyendo los ñoños!”.",
-//     image:
-//       "https://i.pinimg.com/originals/90/c6/76/90c676a1cf11cbb16fbb1afa1da36776.jpg",
-//     character: "Homero",
-//   },
-// ];
+const getFavs = () => {
+  const favs = [];
 
-const QuotesContainer = () => {
+  Object.keys(localStorage).forEach((key) => {
+    try {
+      const value = JSON.parse(localStorage.getItem(key));
+      if (!value.character) return;
+      favs.push(value);
+    } catch (e) {
+      console.log("catched error while parsing");
+    }
+  });
+
+  return favs;
+};
+
+const QuotesContainer = ({ location }) => {
   const [quotes, setQuotes] = useState([]);
   const [charactersFilter, setCharactersFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // console.log(location);
-    // if (location != "/quotes") return;
+    if (location != "/quotes") return setQuotes(getFavs());
+
     setIsLoading(true);
+
     (async () => {
       const result = await fetch(
         "https://friends-quotes-api.herokuapp.com/quotes/15"
@@ -63,22 +35,38 @@ const QuotesContainer = () => {
       setQuotes(data);
       setIsLoading(false);
     })();
-  }, []);
+  }, [location]);
 
   const selectChange = ({ value }) => setCharactersFilter(value);
   const inputChange = (input) => setCharactersFilter(input);
 
-  //get array of characters and remove dupplicates
-  const options = [...new Set(quotes.map((quote) => quote.character))]
-    .map((option) => {
-      return { value: option, label: option };
-    })
-    .concat({ value: "", label: "All" });
-  // const addToFavs = (quote) => localStorage.setItem("")
+  // functions that handle localStorage to get/remove favs
+  const addToFavs = (fav) => {
+    if (!localStorage.getItem(fav.quote))
+      localStorage.setItem(fav.quote, JSON.stringify(fav));
+  };
 
-  const filteredQuotes = quotes.filter((quote) =>
-    quote.character.toLowerCase().match(charactersFilter.toLowerCase())
-  );
+  const removeFromFavs = (fav) => {
+    const newFavs = quotes.filter((item) => item.quote != fav.quote);
+    localStorage.removeItem(fav.quote);
+    setQuotes(newFavs);
+  };
+
+  // get array of characters and remove dupplicates
+  const options =
+    quotes.length > 0 &&
+    [...new Set(quotes.map((quote) => quote.character))]
+      .map((option) => {
+        return { value: option, label: option };
+      })
+      .concat({ value: "", label: "All" });
+
+  const filteredQuotes =
+    quotes.length > 0
+      ? quotes.filter((quote) =>
+          quote.character.toLowerCase().match(charactersFilter.toLowerCase())
+        )
+      : [];
 
   return (
     <Quotes
@@ -88,6 +76,9 @@ const QuotesContainer = () => {
       inputChange={inputChange}
       isLoading={isLoading}
       charactersFilter={charactersFilter}
+      location={location}
+      addToFavs={addToFavs}
+      removeFromFavs={removeFromFavs}
     />
   );
 };

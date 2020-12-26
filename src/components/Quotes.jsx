@@ -1,14 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Select from "react-select";
-import images from "../images";
+import Cards from "./Cards";
+
+const Loading = () => (
+  <div className='spinner-container'>
+    <div className='spinner-border' role='status'>
+      <span className='sr-only'>Loading...</span>
+    </div>
+    <p>Loading quotes...</p>
+  </div>
+);
+
+const Spinner = () => (
+  <div className='spinner-container'>
+    <p>No tenés favoritos aun</p>
+  </div>
+);
 
 const Quotes = ({
   selectChange,
   inputChange,
-  charactersFilter,
   options,
   isLoading,
   filteredQuotes,
+  location,
+  addToFavs,
+  removeFromFavs,
 }) => (
   <div>
     <div className='filter-contaienr'>
@@ -22,33 +39,16 @@ const Quotes = ({
         onMenuClose={() => selectChange({ value: "" })}
       />
     </div>
+    {location == "/favs" && filteredQuotes.length == 0 && <Spinner />}
     {!isLoading ? (
-      <div className='cards'>
-        {filteredQuotes.map((quote, i) => (
-          <div className='card' key={i}>
-            <div className='card_img-container'>
-              <img
-                className='card_img'
-                src={images[quote.character.toLowerCase()]}
-                alt=''
-              />
-            </div>
-            <p className='card_character'>
-              <q className='card_quote'>{quote.quote}</q> - {quote.character}
-            </p>
-            {/* <div>
-              <button className='card_button'>Add to Favs</button>
-            </div> */}
-          </div>
-        ))}
-      </div>
+      <Cards
+        addToFavs={addToFavs}
+        removeFromFavs={removeFromFavs}
+        filteredQuotes={filteredQuotes}
+        location={location}
+      />
     ) : (
-      <div className='spinner-container'>
-        <div className='spinner-border' role='status'>
-          <span className='sr-only'>Loading...</span>
-        </div>
-        <p>Loading quotes...</p>
-      </div>
+      <Loading />
     )}
   </div>
 );

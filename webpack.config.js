@@ -27,9 +27,6 @@ const config = {
         use: [
           {
             loader: "url-loader",
-            // options: {
-            //   mimetype: "image/png",
-            // },
           },
         ],
       },
@@ -43,6 +40,9 @@ const config = {
   },
   devServer: {
     contentBase: "./dist",
+    historyApiFallback: {
+      index: "index.html",
+    },
     // proxy: {
     //   "/quotes": {
     //     target: "https://friends-quotes-api.herokuapp.com",

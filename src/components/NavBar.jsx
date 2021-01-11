@@ -12,7 +12,7 @@ const NavBar = () => (
           <Link to='/quotes'>Frases</Link>
         </li>
         <li className='main-nav__item'>
-          <Link to='/favs'> Mis favoritos</Link>
+          <Link to='/favs'>Favoritos</Link>
         </li>
       </ul>
     </nav>
